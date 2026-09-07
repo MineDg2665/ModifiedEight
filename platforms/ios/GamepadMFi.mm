@@ -36,12 +36,10 @@ void GamepadMFi_poll(void) {
 		Gamepad::feedButton(GP_BTN_Y, gp.buttonY.pressed != 0, GP_BTN_Y);
 		Gamepad::feedButton(GP_BTN_LB, gp.leftShoulder.pressed != 0, GP_BTN_LB);
 		Gamepad::feedButton(GP_BTN_RB, gp.rightShoulder.pressed != 0, GP_BTN_RB);
-		Gamepad::feedButton(GP_BTN_L3, gp.leftThumbstickButton.pressed != 0, GP_BTN_L3);
-		Gamepad::feedButton(GP_BTN_R3, gp.rightThumbstickButton.pressed != 0, GP_BTN_R3);
-		Gamepad::feedAxis(GP_AXIS_LX, gp.leftThumbstick.xValue, 0);
-		Gamepad::feedAxis(GP_AXIS_LY, -gp.leftThumbstick.yValue, 1);
-		Gamepad::feedAxis(GP_AXIS_RX, gp.rightThumbstick.xValue, 2);
-		Gamepad::feedAxis(GP_AXIS_RY, -gp.rightThumbstick.yValue, 3);
+		Gamepad::feedAxis(GP_AXIS_LX, gp.leftThumbstick.xAxis.value, 0);
+		Gamepad::feedAxis(GP_AXIS_LY, -gp.leftThumbstick.yAxis.value, 1);
+		Gamepad::feedAxis(GP_AXIS_RX, gp.rightThumbstick.xAxis.value, 2);
+		Gamepad::feedAxis(GP_AXIS_RY, -gp.rightThumbstick.yAxis.value, 3);
 		Gamepad::feedAxis(GP_AXIS_LT, gp.leftTrigger.value, 4);
 		Gamepad::feedAxis(GP_AXIS_RT, gp.rightTrigger.value, 5);
 		Gamepad::feedHat(gp.dpad.up.pressed != 0, gp.dpad.down.pressed != 0,
