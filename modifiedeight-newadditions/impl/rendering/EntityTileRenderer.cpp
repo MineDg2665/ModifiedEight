@@ -12,3 +12,4 @@ void EntityTileRenderer::render(Tile* a2, int32_t a3, float a4) {
 	}
 	TileEntityRenderDispatcher::getInstance()->render((TileEntity*) this, 0, 0, 0, 0);
 }
+

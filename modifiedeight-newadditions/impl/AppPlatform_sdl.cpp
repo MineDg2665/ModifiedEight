@@ -377,6 +377,7 @@ bool fullscreen = 0;
 int lastWidth = 0, lastHeight = 0;
 void AppPlatform_sdl::onKeyPressed(Minecraft *mc, SDLKey key, uint8_t scancode,
                                    bool pressed) {
+#if !defined(_WIN32) && !defined(WIN32)
   if (!pressed) {
     SDL_Event next_event;
     if (SDL_PeepEvents(&next_event, 1, SDL_PEEKEVENT, SDL_ALLEVENTS) > 0) {
@@ -386,6 +387,7 @@ void AppPlatform_sdl::onKeyPressed(Minecraft *mc, SDLKey key, uint8_t scancode,
       }
     }
   }
+#endif
   int k = 0;
   if (key == SDLK_w || key == 1732 || key == 1764 || scancode == 25)
     k = mc->options.keyForward.keyCode;

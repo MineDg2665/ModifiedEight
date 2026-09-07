@@ -1,4 +1,5 @@
 #include <Minecraft.hpp>
+#include <level/Level.hpp>
 #include <entity/LocalPlayer.hpp>
 #include <gui/NinePatchFactory.hpp>
 #include <gui/buttons/CategoryButton.hpp>
@@ -135,20 +136,34 @@ ItemInstance CreativeInventoryScreen::getItemFromType(int32_t a3) {
   }
 }
 
+static bool s_creativeIsServer = false;
+
 static void addTabItem(int tab, Tile *tile, int count = 1, int aux = 0) {
   if (tile && tab >= 0 && tab < CreativeInventoryScreen::NUM_TABS) {
+    if (s_creativeIsServer) {
+      if (!Item::isVanilla081Id(tile->blockID)) return;
+      if (tile == Tile::bed && aux != 0) return;
+    }
     CreativeInventoryScreen::filteredItems[tab].emplace_back(
         ItemInstance(tile, count, aux));
   }
 }
 static void addTabItem(int tab, Item *item, int count = 1, int aux = 0) {
   if (item && tab >= 0 && tab < CreativeInventoryScreen::NUM_TABS) {
+    if (s_creativeIsServer) {
+      if (!Item::isVanilla081Id(item->itemID)) return;
+      if (item == Item::bed && aux != 0) return;
+      if (item == Item::mushroomStew) return;
+      if (item == Item::mobPlacer && aux != 10 && aux != 11 && aux != 12 && aux != 13 && aux != 32 && aux != 33 && aux != 34 && aux != 35 && aux != 36) return;
+      if (item == Item::fish_raw || item == Item::fish_cooked || item == Item::salmon_raw || item == Item::salmon_cooked || item == Item::clownfish || item == Item::pufferfish) return;
+    }
     CreativeInventoryScreen::filteredItems[tab].emplace_back(
         ItemInstance(item, count, aux));
   }
 }
 
-void CreativeInventoryScreen::populateFilteredItems() {
+void CreativeInventoryScreen::populateFilteredItems(bool isServer) {
+  s_creativeIsServer = isServer;
   for (int i = 0; i < NUM_TABS; ++i) {
     CreativeInventoryScreen::filteredItems[i].clear();
   }
@@ -246,6 +261,7 @@ void CreativeInventoryScreen::populateFilteredItems() {
   addTabItem(7, Item::painting);
   addTabItem(7, Item::flowerPot);
   addTabItem(7, Item::armorStand);
+  addTabItem(7, Item::itemFrame);
   addTabItem(7, Tile::ladder);
   addTabItem(7, Item::sign);
   addTabItem(7, Item::door_wood);
@@ -291,7 +307,6 @@ void CreativeInventoryScreen::populateFilteredItems() {
   addTabItem(7, Tile::head_spider);
   addTabItem(7, Tile::head_slime);
   addTabItem(7, Tile::head_pigzombie);
-  addTabItem(7, Tile::head_giant);
   addTabItem(7, Tile::head_cow);
   addTabItem(7, Tile::head_pig);
   addTabItem(7, Tile::head_sheep);
@@ -595,9 +610,9 @@ void CreativeInventoryScreen::init() {
   CreativeInventoryScreen::items.clear();
   for (int i = 0; i < NUM_TABS; i++) {
     this->field_78[i].reset();
-    CreativeInventoryScreen::filteredItems[i].clear();
   }
-  CreativeInventoryScreen::populateFilteredItems();
+  bool isServer = this->minecraft && (this->minecraft->isOnlineClient() || (this->minecraft->level && this->minecraft->level->isClientMaybe));
+  CreativeInventoryScreen::populateFilteredItems(isServer);
 
   NinePatchFactory v16(this->minecraft->texturesPtr, "gui/spritesheet.png");
   this->field_68 = std::shared_ptr<NinePatchLayer>(

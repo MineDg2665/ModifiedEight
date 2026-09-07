@@ -3,6 +3,7 @@
 #include <entity/Player.hpp>
 #include <item/Item.hpp>
 #include <item/ArmorItem.hpp>
+#include <tile/MobHeadTile.hpp>
 #include <inventory/Inventory.hpp>
 #include <nbt/CompoundTag.hpp>
 #include <nbt/ListTag.hpp>
@@ -98,26 +99,28 @@ bool_t ArmorStand::interactWithPlayer(Player* player) {
 	ItemInstance* held = player->inventory->getSelected();
 	if (held && !held->isNull() && held->count > 0) {
 		Item* it = Item::items[held->getId()];
-		// Mob heads cannot be placed on armor stands
-		if (it && it->isArmor()) {
-			int slot = ((ArmorItem*)it)->field_48;
-			if (slot >= 0 && slot < 4) {
-				ItemInstance oldItem = this->armorItems[slot];
-				this->armorItems[slot] = *held;
-				this->armorItems[slot].count = 1;
-				if (player->inventory->field_20 == 0) {
-					held->count--;
-					if (held->count <= 0) {
-						player->inventory->clearSlot(player->inventory->selectedSlot);
-					}
+		int slot = -1;
+		if (MobHeadTile::isHeadBlock(held->getId())) {
+			slot = 0;
+		} else if (it && it->isArmor()) {
+			slot = ((ArmorItem*)it)->field_48;
+		}
+		if (slot >= 0 && slot < 4) {
+			ItemInstance oldItem = this->armorItems[slot];
+			this->armorItems[slot] = *held;
+			this->armorItems[slot].count = 1;
+			if (player->inventory->field_20 == 0) {
+				held->count--;
+				if (held->count <= 0) {
+					player->inventory->clearSlot(player->inventory->selectedSlot);
 				}
-				if (!oldItem.isNull() && oldItem.count > 0) {
-					player->inventory->add(&oldItem);
-				}
-				player->inventory->setContainerChanged();
-				if (this->level) this->level->playSound(this, "mob.armorstand.place", 1.0f, 1.0f);
-				return 1;
 			}
+			if (!oldItem.isNull() && oldItem.count > 0) {
+				player->inventory->add(&oldItem);
+			}
+			player->inventory->setContainerChanged();
+			if (this->level) this->level->playSound(this, "mob.armorstand.place", 1.0f, 1.0f);
+			return 1;
 		}
 	}
 

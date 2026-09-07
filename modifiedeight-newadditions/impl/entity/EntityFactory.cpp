@@ -57,7 +57,10 @@ Entity* EntityFactory::loadEntity(CompoundTag* tag, Level* level) {
 	if(id < 0) {
 		return 0;
 	}
-	Entity* v7 = id > 63 ? EntityFactory::CreateEntity(id, level) : MobFactory::CreateMob(id, level);
+	Entity* v7 = (id == 40 || id == 41 || id > 63) ? EntityFactory::CreateEntity(id, level) : MobFactory::CreateMob(id, level);
+	if(!v7) {
+		v7 = EntityFactory::CreateEntity(id, level);
+	}
 	if(!v7) {
 		return 0;
 	}

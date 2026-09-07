@@ -14,12 +14,7 @@ EnderChestTileEntity::EnderChestTileEntity()
 }
 
 EnderChestTileEntity::~EnderChestTileEntity() {
-	for (int i = 0; i < 27; ++i) {
-		if (this->items[i]) {
-			delete this->items[i];
-			this->items[i] = nullptr;
-		}
-	}
+	this->items.clear();
 }
 
 bool_t EnderChestTileEntity::canPairWith(TileEntity*) {

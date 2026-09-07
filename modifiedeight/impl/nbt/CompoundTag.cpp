@@ -136,6 +136,10 @@ int32_t CompoundTag::getInt(const std::string& name) const{
 		IntTag* tag  = (IntTag*) this->get(name);
 		return tag->value;
 	}
+	if(this->contains(name, 4)) {
+		LongTag* tag  = (LongTag*) this->get(name);
+		return (int32_t)tag->value;
+	}
 	return 0;
 }
 float CompoundTag::getFloat(const std::string& name) const{
@@ -157,6 +161,10 @@ int64_t CompoundTag::getLong(const std::string& name) const{
 	if(this->contains(name, 4)) {
 		LongTag* tag  = (LongTag*) this->get(name);
 		return tag->value;
+	}
+	if(this->contains(name, 3)) {
+		IntTag* tag  = (IntTag*) this->get(name);
+		return (int64_t)tag->value;
 	}
 	return 0;
 }

@@ -49,7 +49,7 @@ struct CreativeInventoryScreen: Screen, Touch::IInventoryPaneCallback
 	void drawIcon(int, std::shared_ptr<ImageButton>, bool_t, bool_t);
 	int32_t getCategoryFromPanel(const Touch::InventoryPane*);
 	ItemInstance getItemFromType(int32_t);
-	static void populateFilteredItems();
+	static void populateFilteredItems(bool isServer = false);
 	static void populateItem(Item*, int32_t, int32_t);
 	static void populateItem(Tile*, int32_t, int32_t);
 	static void populateItems();

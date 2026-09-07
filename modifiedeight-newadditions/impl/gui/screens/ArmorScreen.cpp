@@ -1,6 +1,7 @@
 #include <gui/screens/ArmorScreen.hpp>
 #include <gui/screens/CreativeInventoryScreen.hpp>
 #include <Minecraft.hpp>
+#include <level/Level.hpp>
 #include <entity/player/gamemode/GameMode.hpp>
 #include <entity/LocalPlayer.hpp>
 #include <gui/NinePatchLayer.hpp>
@@ -243,6 +244,7 @@ bool_t ArmorScreen::takeAndClearSlot(int32_t a2) {
 }
 void ArmorScreen::updateItems() {
 	this->field_1E0.clear();
+	bool isServer = this->minecraft && (this->minecraft->isOnlineClient() || (this->minecraft->level && this->minecraft->level->isClientMaybe));
 	if (this->minecraft->gameMode && this->minecraft->gameMode->isCreativeType()) {
 		static const Item* creativeArmors[] = {
 			Item::helmet_cloth, Item::chestplate_cloth, Item::leggings_cloth, Item::boots_cloth,
@@ -265,9 +267,11 @@ void ArmorScreen::updateItems() {
 				creativeArmorInstances.emplace_back((Item*)it, 1, 0);
 			}
 		}
-		for (const Tile* th : creativeHeads) {
-			if (th) {
-				creativeArmorInstances.emplace_back((Tile*)th, 1, 0);
+		if (!isServer) {
+			for (const Tile* th : creativeHeads) {
+				if (th) {
+					creativeArmorInstances.emplace_back((Tile*)th, 1, 0);
+				}
 			}
 		}
 		for (size_t i = 0; i < creativeArmorInstances.size(); ++i) {
@@ -276,7 +280,7 @@ void ArmorScreen::updateItems() {
 	} else {
 		for(int32_t i = 9; i < this->minecraft->player->inventory->getContainerSize(); ++i) {
 			ItemInstance* v5 = this->minecraft->player->inventory->getItem(i);
-			if(ItemInstance::isArmorItem(v5) || (v5 && v5->tileClass && isHeadTile(v5->tileClass))) {
+			if(ItemInstance::isArmorItem(v5) || (!isServer && v5 && v5->tileClass && isHeadTile(v5->tileClass))) {
 				this->field_1E0.emplace_back(v5);
 			}
 		}

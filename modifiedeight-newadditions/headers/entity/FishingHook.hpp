@@ -26,6 +26,7 @@ struct FishingHook: Entity {
 	virtual void addAdditonalSaveData(CompoundTag*);
 	virtual void tick();
 	virtual bool_t shouldRenderAtSqrDistance(float);
+	virtual bool_t isInWater();
 	void catchingFishLogic();
 	int32_t retrieve(ItemInstance*);
 };

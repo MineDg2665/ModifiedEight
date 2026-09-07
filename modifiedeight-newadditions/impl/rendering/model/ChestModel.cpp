@@ -5,23 +5,11 @@ ChestModel::ChestModel(bool_t a2)
 	, field_98(0, 0, 64, 32)
 	, field_118(0, 0, 64, 32) {
 	float v4 = -8.0;
-	int32_t v5;	 // r9
-	int32_t v6;	 // r3
-	float v8;	 // s17
-	int32_t v11; // [sp+14h] [bp-BCh]
-
-	if(a2) {
-		v5 = 128;
-	} else {
-		v5 = 64;
-	}
-	if(a2) {
-		v6 = 30;
-	} else {
-		v6 = 14;
-	}
+	int32_t v5 = a2 ? 128 : 64;
+	int32_t v6 = a2 ? 30 : 14;
+	float v8;
+	int32_t v11 = v6;
 	this->field_198 = a2;
-	v11 = v6;
 	if(!a2) {
 		v4 = 0.0;
 	}
@@ -50,3 +38,4 @@ void ChestModel::render() {
 	this->field_118.render(0.0625);
 	this->field_98.render(0.0625);
 }
+

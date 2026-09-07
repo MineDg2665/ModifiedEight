@@ -71,6 +71,7 @@ void TileEntityRenderDispatcher::render(TileEntity* a2, float a3) {
 	float v6; // r0
 
 	if(a2->distanceToSqr(this->camX, this->camY, this->camZ) < 4096.0) {
+		glEnable(GL_DEPTH_TEST);
 		v6 = this->level->getBrightness(a2->posX, a2->posY, a2->posZ);
 		glColor4f(v6, v6, v6, 1.0);
 		this->render(a2, (float)a2->posX - TileEntityRenderDispatcher::xOff, (float)a2->posY - TileEntityRenderDispatcher::yOff, (float)a2->posZ - TileEntityRenderDispatcher::zOff, a3);

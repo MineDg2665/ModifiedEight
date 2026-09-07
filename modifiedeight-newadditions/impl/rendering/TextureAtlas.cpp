@@ -420,7 +420,7 @@ void TextureAtlas::load(struct NinecraftApp* mc) {
 				"spawn_egg_ocelot",
 				"oak_boat", "spruce_boat", "birch_boat", "jungle_boat",
 				"jungle_door", "iron_trapdoor", "trapdoor_jungle", "jungle_trapdoor",
-				"copper_ingot", "copper_door", "ender_chest",
+				"copper_ingot", "copper_door", "ender_chest", "chest",
 				"armorstand", "skull_wolf", "skull_fox"
 			};
 			const char* customItemFiles[] = {
@@ -432,7 +432,7 @@ void TextureAtlas::load(struct NinecraftApp* mc) {
 				"textures/items/spawn_egg_ocelot.png",
 				"textures/items/oak_boat.png", "textures/items/spruce_boat.png", "textures/items/birch_boat.png", "textures/items/jungle_boat.png",
 				"textures/items/jungle_door.png", "textures/items/iron_trapdoor.png", "textures/items/trapdoor_jungle.png", "textures/items/jungle_trapdoor.png",
-				"textures/items/copper_ingot.png", "textures/items/copper_door.png", "textures/items/ender_chest.png",
+				"textures/items/copper_ingot.png", "textures/items/copper_door.png", "textures/items/ender_chest.png", "textures/items/chest.png",
 				"textures/items/armorstand.png", "textures/items/skull_wolf.png", "textures/items/skull_fox.png"
 			};
 			int numSlots = sizeof(customItemSlots) / sizeof(customItemSlots[0]);

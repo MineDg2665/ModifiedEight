@@ -28,7 +28,7 @@ ExternalFileLevelStorage::ExternalFileLevelStorage(const std::string& a2, const 
 	this->field_28 = 3;
 	this->levelData = 0;
 	this->regionFile = 0;
-	this->field_34 = -999999;
+	this->field_34 = 0;
 	this->field_1C = 0;
 	this->level = 0;
 	this->field_24 = 0;
@@ -504,6 +504,7 @@ LABEL_12:
 			this->savePendingUnsavedChunks(2);
 		}
 		if(this->field_24 - this->field_34 > 1200) {
+			this->field_34 = this->field_24;
 			this->saveEntities(this->level, 0);
 			this->level->savePlayers();
 		}
