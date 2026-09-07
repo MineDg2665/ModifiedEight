@@ -41,7 +41,7 @@ void TileRenderer::_randomizeFaceDirection(Tile* a2, int32_t a3, float a4, float
 	}
 }
 bool_t TileRenderer::canRender(int32_t a1) {
-	return !a1 || a1 == 13 || a1 == 10 || a1 == 11 || a1 == 21 || a1 == 32 || a1 == 22 || a1 == 31 || a1 == 12;
+	return !a1 || a1 == 13 || a1 == 10 || a1 == 11 || a1 == 21 || a1 == 32 || a1 == 31 || a1 == 12;
 }
 
 TileRenderer::TileRenderer(struct LevelSource* a2) {
@@ -541,7 +541,7 @@ void TileRenderer::renderGuiTile(Tile* tile, int32_t a3, float a4, float a5) {
 	this->field_0 = 0;
 	v11 = tile->getRenderShape();
 	v12 = v11;
-	if(!v11 || v11 == 31 || tile == (Tile*)Tile::chest || (Tile::enderChest && tile == (Tile*)Tile::enderChest)) {
+	if(!v11 || v11 == 31) {
 		tile->updateDefaultShape();
 		Tesselator::instance.begin(7, 24);
 		Tesselator::instance.color(a4 * cr, a4 * cg, a4 * cb, a5);
@@ -605,21 +605,15 @@ LABEL_10:
 		case 13:
 			tile->updateDefaultShape();
 			Tesselator::instance.begin(24);
-			Tesselator::instance.color(a4, a4, a4, a5);
-			v16 = tile->getTexture(0);
-			this->renderFaceDown(tile, 0.0, 0.0, 0.0, *v16);
+			Tesselator::instance.color(a4 * cr, a4 * cg, a4 * cb, a5);
 			v17 = tile->getTexture(1);
 			this->renderFaceUp(tile, 0.0, 0.0, 0.0, *v17);
-			Tesselator::instance.color(a4 * 0.5, a4 * 0.5, a4 * 0.5, a5);
-			v18 = tile->getTexture(2);
-			this->renderNorth(tile, 0.0, 0.0, 0.0625, *v18);
+			Tesselator::instance.color(a4 * 0.5f * cr, a4 * 0.5f * cg, a4 * 0.5f * cb, a5);
 			v50 = *tile->getTexture(3);
 			this->renderSouth(tile, 0.0, 0.0, -0.0625, v50);
-			Tesselator::instance.color(a4 * 0.73, a4 * 0.73, a4 * 0.73, a5);
+			Tesselator::instance.color(a4 * 0.73f * cr, a4 * 0.73f * cg, a4 * 0.73f * cb, a5);
 			v19 = tile->getTexture(4);
 			this->renderWest(tile, 0.0625, 0.0, 0.0, *v19);
-			v20 = tile->getTexture(5);
-			this->renderEast(tile, -0.0625, 0.0, 0.0, *v20);
 			goto LABEL_10;
 		case 10:
 			Tesselator::instance.begin(48);
@@ -629,24 +623,20 @@ LABEL_10:
 				} else {
 					tile->setShape(0.0, 0.0, 0.0, 1.0, 1.0, 0.5);
 				}
-				Tesselator::instance.color(a4, a4, a4, a5);
 				++v5;
-				v22 = tile->getTexture(0);
-				this->renderFaceDown(tile, 0.0, 0.0, 0.0, *v22);
+				Tesselator::instance.color(a4 * cr, a4 * cg, a4 * cb, a5);
 				v23 = tile->getTexture(1);
 				this->renderFaceUp(tile, 0.0, 0.0, 0.0, *v23);
-				Tesselator::instance.color(a4 * 0.5, a4 * 0.5, a4 * 0.5, a5);
-				v24 = tile->getTexture(2);
-				this->renderNorth(tile, 0.0, 0.0, 0.0, *v24);
+				Tesselator::instance.color(a4 * 0.5f * cr, a4 * 0.5f * cg, a4 * 0.5f * cb, a5);
 				v51 = *tile->getTexture(3);
 				this->renderSouth(tile, 0.0, 0.0, 0.0, v51);
-				Tesselator::instance.color(a4 * 0.73, a4 * 0.73, a4 * 0.73, a5);
+				Tesselator::instance.color(a4 * 0.73f * cr, a4 * 0.73f * cg, a4 * 0.73f * cb, a5);
 				v25 = tile->getTexture(4);
 				this->renderWest(tile, 0.0, 0.0, 0.0, *v25);
-				v26 = tile->getTexture(5);
-				this->renderEast(tile, 0.0, 0.0, 0.0, *v26);
 			} while(v5 != 2);
-			goto LABEL_10;
+			Tesselator::instance.draw(1);
+			tile->setShape(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
+			return;
 		case 11:
 			Tesselator::instance.begin(96);
 			do {
@@ -665,22 +655,16 @@ LABEL_10:
 				} else {
 					tile->setShape(0.375, 0.0, 0.0, 0.625, 1.0, 0.25);
 				}
-				Tesselator::instance.color(a4, a4, a4, a5);
 				++v5;
-				v27 = tile->getTexture(0);
-				this->renderFaceDown(tile, 0.0, 0.0, 0.0, *v27);
+				Tesselator::instance.color(a4 * cr, a4 * cg, a4 * cb, a5);
 				v28 = tile->getTexture(1);
 				this->renderFaceUp(tile, 0.0, 0.0, 0.0, *v28);
-				Tesselator::instance.color(a4 * 0.5, a4 * 0.5, a4 * 0.5, a5);
-				v29 = tile->getTexture(2);
-				this->renderNorth(tile, 0.0, 0.0, 0.0, *v29);
+				Tesselator::instance.color(a4 * 0.5f * cr, a4 * 0.5f * cg, a4 * 0.5f * cb, a5);
 				v52 = *tile->getTexture(3);
 				this->renderSouth(tile, 0.0, 0.0, 0.0, v52);
-				Tesselator::instance.color(a4 * 0.73, a4 * 0.73, a4 * 0.73, a5);
+				Tesselator::instance.color(a4 * 0.73f * cr, a4 * 0.73f * cg, a4 * 0.73f * cb, a5);
 				v30 = tile->getTexture(4);
 				this->renderWest(tile, 0.0, 0.0, 0.0, *v30);
-				v31 = tile->getTexture(5);
-				this->renderEast(tile, 0.0, 0.0, 0.0, *v31);
 			} while(v5 != 4);
 LABEL_28:
 			Tesselator::instance.draw(1);
@@ -698,22 +682,16 @@ LABEL_28:
 				} else {
 					tile->setShape(0.4375, 0.3, 0.0, 0.5625, 1.0, 0.125);
 				}
-				Tesselator::instance.color(a4, a4, a4, a5);
 				++v5;
+				Tesselator::instance.color(a4 * cr, a4 * cg, a4 * cb, a5);
 				v33 = tile->getTexture(0);
 				this->renderFaceUp(tile, 0.0, 0.0, 0.0, *v33);
-				v34 = tile->getTexture(1);
-				this->renderFaceDown(tile, 0.0, 0.0, 0.0, *v34);
-				Tesselator::instance.color(a4 * 0.5, a4 * 0.5, a4 * 0.5, a5);
-				v35 = tile->getTexture(2);
-				this->renderNorth(tile, 0.0, 0.0, 0.0, *v35);
+				Tesselator::instance.color(a4 * 0.5f * cr, a4 * 0.5f * cg, a4 * 0.5f * cb, a5);
 				v53 = *tile->getTexture(3);
 				this->renderSouth(tile, 0.0, 0.0, 0.0, v53);
-				Tesselator::instance.color(a4 * 0.73, a4 * 0.73, a4 * 0.73, a5);
+				Tesselator::instance.color(a4 * 0.73f * cr, a4 * 0.73f * cg, a4 * 0.73f * cb, a5);
 				v36 = tile->getTexture(4);
 				this->renderWest(tile, 0.0, 0.0, 0.0, *v36);
-				v37 = tile->getTexture(5);
-				this->renderEast(tile, 0.0, 0.0, 0.0, *v37);
 			} while(v5 != 3);
 			goto LABEL_28;
 		case 32:
@@ -746,21 +724,15 @@ LABEL_28:
 LABEL_49:
 				++v5;
 				v39->setShape(v42, 0.0, 0.5 - v38, v48, v54, v56);
-				Tesselator::instance.color(a4, a4, a4, a5);
+				Tesselator::instance.color(a4 * cr, a4 * cg, a4 * cb, a5);
 				v43 = tile->getTexture(0, a3);
 				this->renderFaceUp(tile, 0.0, 0.0, 0.0, *v43);
-				v44 = tile->getTexture(1, a3);
-				this->renderFaceDown(tile, 0.0, 0.0, 0.0, *v44);
-				Tesselator::instance.color(a4 * 0.5, a4 * 0.5, a4 * 0.5, a5);
-				v45 = tile->getTexture(2, a3);
-				this->renderNorth(tile, 0.0, 0.0, 0.0, *v45);
+				Tesselator::instance.color(a4 * 0.5f * cr, a4 * 0.5f * cg, a4 * 0.5f * cb, a5);
 				v55 = *tile->getTexture(3, a3);
 				this->renderSouth(tile, 0.0, 0.0, 0.0, v55);
-				Tesselator::instance.color(a4 * 0.73, a4 * 0.73, a4 * 0.73, a5);
+				Tesselator::instance.color(a4 * 0.73f * cr, a4 * 0.73f * cg, a4 * 0.73f * cb, a5);
 				v46 = tile->getTexture(4, a3);
 				this->renderWest(tile, 0.0, 0.0, 0.0, *v46);
-				v47 = tile->getTexture(5, a3);
-				this->renderEast(tile, 0.0, 0.0, 0.0, *v47);
 				if(v5 == 4) {
 					goto LABEL_28;
 				}

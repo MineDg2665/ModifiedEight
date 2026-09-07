@@ -108,13 +108,16 @@ bool_t Boat::interactWithPlayer(Player* player) {
 }
 
 float Boat::getRideHeight() {
-	return 1.05f;
+	return 0.95f;
 }
 
 void Boat::positionRider(bool_t isDead) {
 	if (!this->rider) return;
 	float ry = this->posY + this->getRideHeight();
 	this->rider->setPos(this->posX, ry, this->posZ);
+	this->rider->prevPosX = this->prevX;
+	this->rider->prevPosY = this->prevY + this->getRideHeight();
+	this->rider->prevPosZ = this->prevZ;
 }
 
 void Boat::tick() {
@@ -144,13 +147,13 @@ void Boat::tick() {
 		if (this->motionY < 0.05f) {
 			this->motionY += 0.04f;
 		}
-		this->motionX *= 0.92f;
-		this->motionZ *= 0.92f;
+		this->motionX *= 0.97f;
+		this->motionZ *= 0.97f;
 		this->motionY *= 0.8f;
 	} else {
 		this->motionY -= 0.04f;
-		this->motionX *= 0.98f;
-		this->motionZ *= 0.98f;
+		this->motionX *= 0.82f;
+		this->motionZ *= 0.82f;
 		this->motionY *= 0.98f;
 	}
 
@@ -161,9 +164,10 @@ void Boat::tick() {
 		} else {
 			if (p->moveStrafe > 0.0f) this->yaw -= 3.0f;
 			else if (p->moveStrafe < 0.0f) this->yaw += 3.0f;
+			else this->yaw = p->yaw;
 			float forward = p->moveForward;
 			if (forward != 0.0f) {
-				float speed = inWater ? 0.04f : 0.02f;
+				float speed = inWater ? 0.08f : 0.015f;
 				float rad = (this->yaw * 3.14159265f) / 180.0f;
 				this->motionX += -std::sin(rad) * speed * forward;
 				this->motionZ += std::cos(rad) * speed * forward;
@@ -176,10 +180,11 @@ void Boat::tick() {
 		}
 	}
 
+	float maxSpeed = inWater ? 0.55f : 0.15f;
 	float speedH = std::sqrt(this->motionX * this->motionX + this->motionZ * this->motionZ);
-	if (speedH > 0.35f) {
-		this->motionX = (this->motionX / speedH) * 0.35f;
-		this->motionZ = (this->motionZ / speedH) * 0.35f;
+	if (speedH > maxSpeed) {
+		this->motionX = (this->motionX / speedH) * maxSpeed;
+		this->motionZ = (this->motionZ / speedH) * maxSpeed;
 	}
 
 	this->move(this->motionX, this->motionY, this->motionZ);

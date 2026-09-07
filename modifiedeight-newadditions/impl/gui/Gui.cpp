@@ -444,6 +444,12 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
         this->renderOnSelectItemNameText(v15, font, v16 - 19);
 
         if (!this->minecraftInst->options.hideGUI) {
+          glEnable(GL_TEXTURE_2D);
+          glEnable(GL_BLEND);
+          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+          glDisable(GL_DEPTH_TEST);
+          glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
           float startY = 2.0f;
           if (this->minecraftInst->gameMode->isSurvivalType()) {
             startY = 14.0f;
@@ -463,8 +469,8 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
 
             char_t dbgText1[128];
             sprintf(dbgText1,
-                    "ModifiedEight New Additions 1.6.5.1pre4 (%d fps)", fps);
-            font->drawShadow(dbgText1, 2.0f, startY, 0xFFFFFF);
+                    "ModifiedEight New Additions 1.6.5.1pre5 (%d fps)", fps);
+            font->drawShadow(dbgText1, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
 
             char_t dbgText2[128];
@@ -473,7 +479,7 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
                     this->minecraftInst->player->posY -
                         this->minecraftInst->player->ridingHeight,
                     this->minecraftInst->player->posZ);
-            font->drawShadow(dbgText2, 2.0f, startY, 0xFFFFFF);
+            font->drawShadow(dbgText2, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
 
             char_t dbgText4[128];
@@ -483,12 +489,12 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
                                  this->minecraftInst->player->ridingHeight)) >>
                         4,
                     ((int)floorf(this->minecraftInst->player->posZ)) >> 4);
-            font->drawShadow(dbgText4, 2.0f, startY, 0xFFFFFF);
+            font->drawShadow(dbgText4, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
 
             char_t dbgTextMem[128];
             sprintf(dbgTextMem, "Memory: %ld MB", getMemoryUsageMB());
-            font->drawShadow(dbgTextMem, 2.0f, startY, 0xFFFFFF);
+            font->drawShadow(dbgTextMem, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
 
             Biome *biome = this->minecraftInst->level->getBiome(
@@ -497,7 +503,7 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
             char_t dbgTextBiome[128];
             sprintf(dbgTextBiome, "Biome: %s",
                     biome ? biome->biomeName : "Unknown");
-            font->drawShadow(dbgTextBiome, 2.0f, startY, 0xFFFFFF);
+            font->drawShadow(dbgTextBiome, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
 
             int32_t seed = this->minecraftInst->level
@@ -505,7 +511,7 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
                                : 0;
             char_t dbgTextSeed[128];
             sprintf(dbgTextSeed, "Seed: %d", seed);
-            font->drawShadow(dbgTextSeed, 2.0f, startY, 0xFFFFFF);
+            font->drawShadow(dbgTextSeed, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
 
             float rawYaw = this->minecraftInst->player->yaw;
@@ -521,7 +527,7 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
                                       "East (+X)"};
             char_t dbgTextDir[128];
             sprintf(dbgTextDir, "Facing: %s (yaw: %.1f)", dirNames[dir], yaw);
-            font->drawShadow(dbgTextDir, 2.0f, startY, 0xFFFFFF);
+            font->drawShadow(dbgTextDir, 2.0f, startY, 0xFFFFFFFF);
             startY += 10.0f;
           } else {
             if (this->minecraftInst->options.showCoordinates) {
@@ -531,8 +537,7 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
                       (int)floorf(this->minecraftInst->player->posY -
                                   this->minecraftInst->player->ridingHeight),
                       (int)floorf(this->minecraftInst->player->posZ));
-              font->draw(coordsText, 3.0f, startY + 1.0f, 0x3F3F3F);
-              font->drawShadow(coordsText, 2.0f, startY, 0xFFFFFF);
+              font->drawShadow(coordsText, 2.0f, startY, 0xFFFFFFFF);
               startY += 10.0f;
             }
             if (this->minecraftInst->options.showFps) {
@@ -548,7 +553,7 @@ void Gui::render(float a2, bool_t a3, int32_t a4, int32_t a5) {
               }
               char_t fpsText[64];
               sprintf(fpsText, "FPS: %d", fps);
-              font->drawShadow(fpsText, 2.0f, startY, 0xFFFFFF);
+              font->drawShadow(fpsText, 2.0f, startY, 0xFFFFFFFF);
               startY += 10.0f;
             }
           }

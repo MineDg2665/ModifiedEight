@@ -1,6 +1,7 @@
 #include <gui/screens/PaneCraftingScreen.hpp>
 #include <I18n.hpp>
 #include <Minecraft.hpp>
+#include <level/Level.hpp>
 #include <algorithm>
 #include <crafting/CItem.hpp>
 #include <crafting/Recipe.hpp>
@@ -139,9 +140,17 @@ void PaneCraftingScreen::initCategories() {
 	std::vector<Recipe*>* vec = Recipes::getInstance()->getRecipes();
 	std::vector<Recipe*> a3;
 	a3.reserve(vec->size());
+	bool isServer = this->minecraft && (this->minecraft->isOnlineClient() || (this->minecraft->level && this->minecraft->level->isClientMaybe));
 	for(int j = 0; j < vec->size(); ++j) {
-		if(this->field_17C >= vec->at(j)->getCraftingSize()) {
-			a3.emplace_back(vec->at(j));
+		Recipe* r = vec->at(j);
+		if(this->field_17C >= r->getCraftingSize()) {
+			if(isServer) {
+				const std::vector<ItemInstance>* res = r->getResultItem();
+				if(res && !res->empty() && !Item::isVanilla081Id(res->at(0).getId())) {
+					continue;
+				}
+			}
+			a3.emplace_back(r);
 		}
 	}
 	this->filterRecipes(a3);

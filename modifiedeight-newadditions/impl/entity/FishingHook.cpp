@@ -5,6 +5,7 @@
 #include <item/Item.hpp>
 #include <item/ItemInstance.hpp>
 #include <level/Level.hpp>
+#include <tile/material/Material.hpp>
 #include <math/Mth.hpp>
 #include <cmath>
 
@@ -82,6 +83,17 @@ bool_t FishingHook::shouldRenderAtSqrDistance(float dist) {
 	return dist < 4096.0f;
 }
 
+bool_t FishingHook::isInWater() {
+	AABB bb;
+	bb.minX = this->boundingBox.minX - 0.1f;
+	bb.minY = this->boundingBox.minY - 0.25f;
+	bb.minZ = this->boundingBox.minZ - 0.1f;
+	bb.maxX = this->boundingBox.maxX + 0.1f;
+	bb.maxY = this->boundingBox.maxY + 0.25f;
+	bb.maxZ = this->boundingBox.maxZ + 0.1f;
+	return this->level ? this->level->checkAndHandleWater(bb, Material::water, this) : 0;
+}
+
 void FishingHook::catchingFishLogic() {
 	if (this->nibble > 0) {
 		--this->nibble;
@@ -89,38 +101,41 @@ void FishingHook::catchingFishLogic() {
 			this->timeUntilLured = 60 + this->random.genrand_int32() % 100;
 			this->timeUntilHooked = 0;
 		} else {
-			this->motionY -= 0.03f * this->random.nextFloat();
-			if (this->random.genrand_int32() % 4 == 0) {
+			this->motionY -= 0.06f + 0.04f * this->random.nextFloat();
+			if (this->random.genrand_int32() % 2 == 0) {
 				this->level->addParticle(PT_BUBBLE, this->posX + (this->random.nextFloat() - 0.5f) * 0.4f, this->posY + 0.1f, this->posZ + (this->random.nextFloat() - 0.5f) * 0.4f, 0.0f, 0.08f, 0.0f, 0);
 			}
 		}
 	} else if (this->timeUntilHooked > 0) {
 		--this->timeUntilHooked;
-		float prog = (float)this->timeUntilHooked / 35.0f;
-		float bDist = prog * 4.2f;
-		float bAngle = (float)this->entityId * 2.399f;
-		float bX = this->posX + sinf(bAngle) * bDist;
-		float bZ = this->posZ + cosf(bAngle) * bDist;
+		float prog = (float)this->timeUntilHooked / 40.0f;
+		float bDist = prog * 4.5f;
+		float bX = this->posX + sinf(this->fishAngle) * bDist;
+		float bZ = this->posZ + cosf(this->fishAngle) * bDist;
 		float bY = this->posY + 0.05f;
-		for (int i = 0; i < 3; ++i) {
-			float rX = bX + (this->random.nextFloat() - 0.5f) * 0.15f;
-			float rZ = bZ + (this->random.nextFloat() - 0.5f) * 0.15f;
-			this->level->addParticle(PT_BUBBLE, rX, bY, rZ, -sinf(bAngle) * 0.08f, 0.08f, -cosf(bAngle) * 0.08f, 0);
+		for (int i = 0; i < 6; ++i) {
+			float rX = bX + (this->random.nextFloat() - 0.5f) * 0.2f;
+			float rZ = bZ + (this->random.nextFloat() - 0.5f) * 0.2f;
+			this->level->addParticle(PT_BUBBLE, rX, bY, rZ, -sinf(this->fishAngle) * 0.05f, 0.05f, -cosf(this->fishAngle) * 0.05f, 0);
 		}
 		if (this->timeUntilHooked == 0) {
-			this->motionY = -0.45f;
-			this->level->playSound(this, "random.splash", 1.2f, 0.9f + (this->random.nextFloat() - this->random.nextFloat()) * 0.2f);
-			for (int p = 0; p < 20; ++p) {
-				float ox = (this->random.nextFloat() - 0.5f) * 0.5f;
-				float oz = (this->random.nextFloat() - 0.5f) * 0.5f;
-				this->level->addParticle(PT_BUBBLE, this->posX + ox, this->posY + 0.1f, this->posZ + oz, ox * 0.25f, 0.18f, oz * 0.25f, 0);
+			this->motionY = -0.55f;
+			this->level->playSound(this->posX, this->posY, this->posZ, "random.splash", 1.2f, 0.9f + (this->random.nextFloat() - this->random.nextFloat()) * 0.2f);
+			if (this->owner) {
+				this->level->playSound(this->owner, "random.splash", 1.2f, 1.0f);
+			}
+			for (int p = 0; p < 30; ++p) {
+				float ox = (this->random.nextFloat() - 0.5f) * 0.6f;
+				float oz = (this->random.nextFloat() - 0.5f) * 0.6f;
+				this->level->addParticle(PT_BUBBLE, this->posX + ox, this->posY + 0.1f, this->posZ + oz, ox * 0.25f, 0.2f, oz * 0.25f, 0);
 			}
 			this->nibble = 45 + this->random.genrand_int32() % 30;
 		}
 	} else if (this->timeUntilLured > 0) {
 		--this->timeUntilLured;
 		if (this->timeUntilLured <= 0) {
-			this->timeUntilHooked = 35;
+			this->timeUntilHooked = 40;
+			this->fishAngle = this->random.nextFloat() * 6.2831853f;
 		}
 	} else {
 		this->timeUntilLured = 60 + this->random.genrand_int32() % 100;
@@ -148,7 +163,11 @@ void FishingHook::tick() {
 	if (inWater) {
 		this->motionX *= 0.85f;
 		this->motionZ *= 0.85f;
-		this->motionY = (this->motionY + 0.02f) * 0.8f;
+		if (this->nibble > 0) {
+			this->motionY = (this->motionY - 0.05f) * 0.7f;
+		} else {
+			this->motionY = (this->motionY - 0.005f) * 0.75f;
+		}
 		this->catchingFishLogic();
 	} else {
 		this->motionY -= 0.04f;

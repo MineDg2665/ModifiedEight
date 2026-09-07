@@ -36,6 +36,17 @@ void GamepadMFi_poll(void) {
 		Gamepad::feedButton(GP_BTN_Y, gp.buttonY.pressed != 0, GP_BTN_Y);
 		Gamepad::feedButton(GP_BTN_LB, gp.leftShoulder.pressed != 0, GP_BTN_LB);
 		Gamepad::feedButton(GP_BTN_RB, gp.rightShoulder.pressed != 0, GP_BTN_RB);
+		BOOL l3 = NO, r3 = NO;
+		if ([gp respondsToSelector:@selector(leftThumbstickButton)]) {
+			GCControllerButtonInput *btn = (GCControllerButtonInput *)[gp valueForKey:@"leftThumbstickButton"];
+			if (btn) l3 = btn.pressed != 0;
+		}
+		if ([gp respondsToSelector:@selector(rightThumbstickButton)]) {
+			GCControllerButtonInput *btn = (GCControllerButtonInput *)[gp valueForKey:@"rightThumbstickButton"];
+			if (btn) r3 = btn.pressed != 0;
+		}
+		Gamepad::feedButton(GP_BTN_L3, l3, GP_BTN_L3);
+		Gamepad::feedButton(GP_BTN_R3, r3, GP_BTN_R3);
 		Gamepad::feedAxis(GP_AXIS_LX, gp.leftThumbstick.xAxis.value, 0);
 		Gamepad::feedAxis(GP_AXIS_LY, -gp.leftThumbstick.yAxis.value, 1);
 		Gamepad::feedAxis(GP_AXIS_RX, gp.rightThumbstick.xAxis.value, 2);

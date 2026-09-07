@@ -62,8 +62,23 @@ void ArmorStandRenderer::render(Entity *entity, float x, float y, float z,
       if (i == 0 && MobHeadTile::isHeadBlock(piece->getId())) {
         int htype = MobHeadTile::getHeadType(piece->getId());
         if (MobHeadRenderer::instance) {
+          float s = 1.0625f;
+          float yOff = -0.25f;
+          if (htype == 9) { s = 1.25f; }
+          else if (htype == 10) { s = 1.6f; yOff = -0.22f; }
+          else if (htype == 11) { s = 1.0f; yOff = -0.3125f; }
+          else if (htype == 12) { s = 1.25f; yOff = -0.125f; }
+          else if (htype == 13) { s = 1.15f; }
+          else if (htype == 14) { s = 1.25f; yOff = -0.16f; }
+          else if (htype == 16) { s = 1.25f; }
+          else if (htype == 17) { s = 1.25f; }
+
           glPushMatrix();
-          glTranslatef(0.0f, 0.0f, 0.0f);
+          ((HumanoidModel*)this->model)->headModel.translateTo(0.0625f);
+          glTranslatef(0.0f, yOff, 0.0f);
+          glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+          glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+          glScalef(s, s, s);
           MobHeadRenderer::instance->renderHead(htype, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
           glPopMatrix();
         }

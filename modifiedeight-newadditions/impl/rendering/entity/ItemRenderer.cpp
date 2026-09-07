@@ -259,15 +259,7 @@ void ItemRenderer::renderGuiItemCorrect(Font* a1, Textures* a2, const ItemInstan
 	if(a3) {
 		if(a3->tileClass && MobHeadTile::isHeadBlock(a3->tileClass->blockID)) {
 			int htype = MobHeadTile::getHeadType(a3->tileClass->blockID);
-			if(MobHeadRenderer::instance) {
-				glPushMatrix();
-				glTranslatef((float)(a4 + 8), (float)(a5 + 11.5), -8.0f);
-				glScalef(16.0f, 16.0f, 16.0f);
-				glRotatef(200.0f, 1.0f, 0.0f, 0.0f);
-				glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
-				MobHeadRenderer::instance->renderHead(htype, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
-				glPopMatrix();
-			}
+			MobHeadRenderer::render2DFace(a2, htype, (float)a4 + 2.0f, (float)a5 + 2.0f, 12.0f, 1.0f);
 			return;
 		} else if(a3->tileClass && (v9 = a3->tileClass->getRenderShape(), TileRenderer::canRender(v9))) {
 			a2->loadAndBindTexture("terrain.png");
@@ -280,11 +272,12 @@ void ItemRenderer::renderGuiItemCorrect(Font* a1, Textures* a2, const ItemInstan
 			glScalef(1.0, 1.0, 1.0);
 			ItemRenderer::tileRenderer->renderGuiTile(a3->tileClass, a3->getAuxValue(), 1.0, 1.0);
 			glPopMatrix();
-		} else if(a3->itemClass) {
-			a2->loadAndBindTexture(a3->tileClass ? "terrain-atlas.tga" : "gui/items.png");
+		} else if(a3->itemClass || a3->tileClass) {
+			bool isCustomItem = (a3->tileClass == Tile::chest || (Tile::enderChest && a3->tileClass == Tile::enderChest) || !a3->tileClass);
+			a2->loadAndBindTexture(isCustomItem ? "gui/items.png" : "terrain-atlas.tga");
 			icon = a3->getIcon(0, 0);
 			if (icon) {
-				int32_t col = getFoliageColor(a3->tileClass, a3->getAuxValue(), a3->getId());
+				int32_t col = isCustomItem ? -1 : getFoliageColor(a3->tileClass, a3->getAuxValue(), a3->getId());
 				ItemRenderer::iconBlit((float)a4, (float)a5, *icon, 16.0f, 16.0f, 1.0f, 1.0f, col, 1.0f);
 			}
 		}
@@ -331,11 +324,15 @@ void ItemRenderer::renderGuiItemInChunk(ItemRenderChunkType a1, Textures* a2, co
 	if(a3) {
 		tileClass = a3->tileClass;
 		if(!tileClass || MobHeadTile::isHeadBlock(tileClass->blockID) || (!TileRenderer::canRender(tileClass->getRenderShape()))) {
-			if(!a3->itemClass) {
+			if(!a3->itemClass && !tileClass) {
 				return;
 			}
 			if(a1 == IRCT_THREE) {
 				if(tileClass && !MobHeadTile::isHeadBlock(tileClass->blockID)) {
+					if (tileClass == Tile::chest || (Tile::enderChest && tileClass == Tile::enderChest)) {
+						v19 = -1;
+						goto LABEL_21;
+					}
 LABEL_19:
 					v19 = getFoliageColor(tileClass, a3->getAuxValue(), a3->getId());
 LABEL_21:
@@ -347,6 +344,11 @@ LABEL_21:
 					return;
 				}
 				if(tileClass && !MobHeadTile::isHeadBlock(tileClass->blockID)) {
+					if (tileClass == Tile::chest || (Tile::enderChest && tileClass == Tile::enderChest)) {
+						if (a1 == IRCT_ONE) return;
+						v19 = -1;
+						goto LABEL_21;
+					}
 					if(a1 == IRCT_TWO) {
 						return;
 					}
@@ -377,15 +379,7 @@ void ItemRenderer::renderGuiItemNew(Textures* a1, const ItemInstance* a2, int32_
 	Tile* tileClass = a2->tileClass;
 	if (tileClass && MobHeadTile::isHeadBlock(tileClass->blockID)) {
 		int htype = MobHeadTile::getHeadType(tileClass->blockID);
-		if (MobHeadRenderer::instance) {
-			glPushMatrix();
-			glTranslatef(a4 + 8.0f, a5 + 11.5f, -8.0f);
-			glScalef(16.0f * a8, 16.0f * a8, 16.0f * a8);
-			glRotatef(200.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
-			MobHeadRenderer::instance->renderHead(htype, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
-			glPopMatrix();
-		}
+		MobHeadRenderer::render2DFace(a1, htype, a4 + 2.0f * a8, a5 + 2.0f * a8, 12.0f * a8, a7);
 		return;
 	}
 	int32_t aux;
@@ -398,12 +392,13 @@ void ItemRenderer::renderGuiItemNew(Textures* a1, const ItemInstance* a2, int32_
 		ItemRenderer::renderGuiItemInChunk(IRCT_THREE, a1, (ItemInstance*)a2, a4, a5, a7, a6, a8);
 	} else {
 		itemClass = a2->itemClass;
-		if(itemClass) {
-			if(tileClass && !MobHeadTile::isHeadBlock(tileClass->blockID)) {
+		if(!itemClass && tileClass) itemClass = Item::items[tileClass->blockID];
+		if(itemClass || tileClass) {
+			if(tileClass && !MobHeadTile::isHeadBlock(tileClass->blockID) && tileClass != Tile::chest && (!Tile::enderChest || tileClass != Tile::enderChest)) {
 				a1->loadAndBindTexture("terrain-atlas.tga");
 				v16 = getFoliageColor(tileClass, a2->getAuxValue(), a2->getId());
 			} else {
-				a1->loadAndBindTexture(itemClass->itemTexture);
+				a1->loadAndBindTexture((itemClass && !itemClass->itemTexture.empty()) ? itemClass->itemTexture : "items-opaque.png");
 				v16 = getFoliageColor(0, a2->getAuxValue(), a2->getId());
 			}
 			ItemRenderer::iconBlit(a4 - 1.0, a5 + 1.0, *a2->getIcon(a3, 0), 16.0, 16.0, a7, 1.0, v16, a8);
@@ -474,7 +469,7 @@ void ItemRenderer::render(Entity* e_, float x, float y, float z, float a6, float
 		glPopMatrix();
 		return;
 	}
-	if(tileClass && (Tile::enderChest ? tileClass != Tile::enderChest : true) && (v18 = tileClass->getRenderShape(), TileRenderer::canRender(v18))) {
+	if(tileClass && (v18 = tileClass->getRenderShape(), TileRenderer::canRender(v18))) {
 		v19 = 0;
 		glRotatef((float)((float)(v13 / 20.0) + hoverStart) * 57.296, 0.0, 1.0, 0.0);
 		v35 = 0.5;

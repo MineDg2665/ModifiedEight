@@ -39,6 +39,12 @@ void ChestRenderer::render(struct TileEntity* tee, float x, float y, float z, fl
 		if(!v12) {
 			te->setupLighting(a7, a6);
 		}
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+		glDisable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1f);
 		glPushMatrix();
 		glTranslatef(x, y + 1.0, z + 1.0);
 		glScalef(1.0, -1.0, -1.0);

@@ -316,6 +316,20 @@ void Item::initItems(std::shared_ptr<TextureAtlas> a2){
 	if (Tile::sweetBerryBush && !Item::items[Tile::sweetBerryBush->blockID]) new TileItem(Tile::sweetBerryBush->blockID - 256);
 	if (Tile::musicPlayer && !Item::items[Tile::musicPlayer->blockID]) new TileItem(Tile::musicPlayer->blockID - 256);
 	if (Tile::slimeBlock && !Item::items[Tile::slimeBlock->blockID]) new TileItem(Tile::slimeBlock->blockID - 256);
+	if (Tile::chest) {
+		if (Item::items[Tile::chest->blockID]) {
+			Item::items[Tile::chest->blockID]->setIcon("chest", 0);
+		} else {
+			(new TileItem(Tile::chest->blockID - 256))->setIcon("chest", 0)->setDescriptionId("chest");
+		}
+	}
+	if (Tile::enderChest) {
+		if (Item::items[Tile::enderChest->blockID]) {
+			Item::items[Tile::enderChest->blockID]->setIcon("ender_chest", 0);
+		} else {
+			(new TileItem(Tile::enderChest->blockID - 256))->setIcon("ender_chest", 0)->setDescriptionId("enderChest");
+		}
+	}
 	
 	if (Item::items[Tile::stainedGlass->blockID])
 		Item::items[Tile::stainedGlass->blockID]->setStackedByData(true);
@@ -637,4 +651,41 @@ bool_t Item::isEmissive(int32_t) {
 }
 int32_t Item::getAnimationFrameFor(Mob*) {
 	return 0;
+}
+
+bool Item::isVanilla081Id(int32_t id) {
+	if (id < 256) {
+		static const bool validTiles[256] = {
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1,
+			1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+			1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,
+			1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1,
+			1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0,
+			1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+			1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1
+		};
+		return (id >= 0 && id < 256 && validTiles[id]);
+	} else {
+		if (id >= 258 && id <= 321) return true;
+		if (id >= 323 && id <= 325) return true;
+		if (id >= 328 && id <= 332) return true;
+		if (id == 334 || id == 336 || id == 337 || id == 338 || id == 339 || id == 340 || id == 341) return true;
+		if (id == 344 || id == 345 || id == 347 || id == 348) return true;
+		if (id >= 351 && id <= 355) return true;
+		if (id >= 359 && id <= 366) return true;
+		if (id == 383) return true;
+		if (id >= 391 && id <= 393) return true;
+		if (id == 400 || id == 405 || id == 406) return true;
+		if (id >= 456 && id <= 459) return true;
+		return false;
+	}
 }

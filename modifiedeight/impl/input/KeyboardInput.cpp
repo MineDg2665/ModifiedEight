@@ -100,12 +100,11 @@ void KeyboardInput::setKey(int32_t a2, bool_t a3) {
 	if(a2 == keyCode || a2 == 10) {
 		v4 = 5;
 	}
-	// detect double-tap on forward key (press)
-	if(v4 == 0 && a3) {
+	if(v4 == 0 && a3 && !this->inputs[0]) {
 		if(this->forwardTapTimer > 0) {
 			this->forwardDoubleTapDetected = true;
 		} else {
-			this->forwardTapTimer = 10; // ~10 ticks window
+			this->forwardTapTimer = 12;
 		}
 	}
 	if(a2 == v6) {

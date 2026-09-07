@@ -1094,6 +1094,9 @@ void LevelRenderer::renderOutlineHitSelect(Player *a2, float a3, Tile *a4,
 void LevelRenderer::renderShadows(
     const std::multimap<int32_t, Entity *, std::greater<int>> &a2,
     const std::vector<TileEntity *> &a3, float a4) {
+#if defined(ANDROID) || defined(__ANDROID__) || defined(TARGET_OS_IPHONE) || defined(IPHONE)
+  return;
+#endif
   float v8;        // s18
   float v9;        // s20
   float v10;       // s19

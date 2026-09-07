@@ -35,6 +35,10 @@ LevelData::LevelData(const LevelData& a2) {
 	this->gameType = a2.gameType;
 	this->storageVersion = a2.storageVersion;
 	this->spawnMobs = a2.spawnMobs;
+	this->generateCaves = a2.generateCaves;
+	this->spawnMonsters = a2.spawnMonsters;
+	this->spawnAnimals = a2.spawnAnimals;
+	this->stopTime = a2.stopTime;
 	this->generatorVersion = a2.generatorVersion;
 	this->setPlayerTag(a2.playerTag);
 }
@@ -166,7 +170,7 @@ void LevelData::getTagData(const CompoundTag* a2) {
 		this->storageVersion = a2->getInt("StorageVersion");
 		this->generatorVersion = a2->getInt("generatorVersion");
 		if(a2->contains("dayCycleStopTime")) {
-			this->stopTime = a2->getLong("dayCycleStopTime");
+			this->stopTime = a2->getInt("dayCycleStopTime");
 		} else {
 			this->stopTime = -1;
 		}

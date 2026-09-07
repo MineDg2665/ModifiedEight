@@ -108,13 +108,14 @@ float ItemInstance::getDestroySpeed(Tile* a2) {
 	return this->itemClass->getDestroySpeed(this, a2);
 }
 TextureUVCoordinateSet* ItemInstance::getIcon(int32_t a2, bool_t a3) const{
-	/*
-	 * Item::items[] is sparse.  A tile with no TileItem registered for it - or an
-	 * id translated in from a Java server that this build does not carry - leaves
-	 * itemClass null while isValid stays set, and every caller dereferences what
-	 * comes back from here.  Fall back to the tile's own carried texture, and to
-	 * an empty set when there is not even that.
-	 */
+	if (this->tileClass) {
+		if (this->tileClass == Tile::chest && Item::items[54]) {
+			return Item::items[54]->getIcon(this->metadata, a2, a3);
+		}
+		if (Tile::enderChest && this->tileClass == Tile::enderChest && Item::items[Tile::enderChest->blockID]) {
+			return Item::items[Tile::enderChest->blockID]->getIcon(this->metadata, a2, a3);
+		}
+	}
 	if(!this->itemClass) {
 		if(this->tileClass) return this->tileClass->getCarriedTexture(0, this->metadata);
 		static TextureUVCoordinateSet blank;

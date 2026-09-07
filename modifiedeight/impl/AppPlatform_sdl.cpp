@@ -5,10 +5,10 @@
 #include <_AssetFile.hpp>
 #include <cmath>
 #include <entity/LocalPlayer.hpp>
+#include <gui/Screen.hpp>
 #include <input/ControllerHandler.hpp>
 #include <input/ControllerLayout.hpp>
 #include <input/Gamepad.hpp>
-#include <gui/Screen.hpp>
 #include <input/Keyboard.hpp>
 #include <input/KeyboardInput.hpp>
 #include <input/Mouse.hpp>
@@ -194,7 +194,7 @@ bool_t AppPlatform_sdl::sdlCtxInit() {
     return 1;
 
   SDL_Init(SDL_INIT_VIDEO);
-  SDL_WM_SetCaption("ModifiedEight Classic 1.6.5pre4", 0);
+  SDL_WM_SetCaption("ModifiedEight Classic 1.6.5pre5", 0);
 
   {
     int w, h, ch;
@@ -309,6 +309,7 @@ bool fullscreen = 0;
 int lastWidth = 0, lastHeight = 0;
 void AppPlatform_sdl::onKeyPressed(Minecraft *mc, SDLKey key, uint8_t scancode,
                                    bool pressed) {
+#if !defined(_WIN32) && !defined(WIN32)
   if (!pressed) {
     SDL_Event next_event;
     if (SDL_PeepEvents(&next_event, 1, SDL_PEEKEVENT, SDL_ALLEVENTS) > 0) {
@@ -318,6 +319,7 @@ void AppPlatform_sdl::onKeyPressed(Minecraft *mc, SDLKey key, uint8_t scancode,
       }
     }
   }
+#endif
   int k = 0;
   if (key == SDLK_w || key == 1732 || key == 1764 || scancode == 25)
     k = mc->options.keyForward.keyCode;
@@ -460,7 +462,7 @@ void AppPlatform_sdl::init() {
         DiscordRPC::init("1516425667376451594");
         DiscordRPC::update(
             "Modified MCPE Alpha 0.8.1 client with new stuff", "icon",
-            "ModifiedEight Classic 1.6.5pre4",
+            "ModifiedEight Classic 1.6.5pre5",
             {{"Get Client", "https://modifiedeight.github.io/"}});
       }
     }
@@ -510,7 +512,7 @@ void AppPlatform_sdl::init() {
           if (online < 1 && curState == 3)
             online = 1;
           DiscordRPC::update(
-              details, "icon", "ModifiedEight Classic 1.6.5pre4",
+              details, "icon", "ModifiedEight Classic 1.6.5pre5",
               {{"Get Client", "https://modifiedeight.github.io/"}},
               curState == 3 ? online : 0, curState == 3 ? online : 0);
         }
@@ -570,7 +572,8 @@ void AppPlatform_sdl::init() {
           break;
         _mx = appPlatform.sdl_event.motion.x;
         _my = appPlatform.sdl_event.motion.y;
-        if (appPlatform.sdl_event.motion.xrel != 0 || appPlatform.sdl_event.motion.yrel != 0) {
+        if (appPlatform.sdl_event.motion.xrel != 0 ||
+            appPlatform.sdl_event.motion.yrel != 0) {
           ControllerHandler::hideCursor();
         }
         Mouse::feed(0, 0, _mx, _my, appPlatform.sdl_event.motion.xrel,
@@ -672,7 +675,8 @@ void AppPlatform_sdl::init() {
     static int s_numOpenedControllers = 0;
     static bool s_wasConnected = false;
     int curNumJoysticks = SDL_NumJoysticks();
-    if (curNumJoysticks > 8) curNumJoysticks = 8;
+    if (curNumJoysticks > 8)
+      curNumJoysticks = 8;
     if (curNumJoysticks < s_numOpenedControllers) {
       for (int i = curNumJoysticks; i < s_numOpenedControllers; i++) {
         if (s_gameControllers[i]) {
@@ -692,7 +696,8 @@ void AppPlatform_sdl::init() {
     SDL_Joystick *activeJoy = nullptr;
     for (int i = 0; i < s_numOpenedControllers; i++) {
       SDL_Joystick *j = s_gameControllers[i];
-      if (!j) continue;
+      if (!j)
+        continue;
       int numButtons = SDL_JoystickNumButtons(j);
       int numAxes = SDL_JoystickNumAxes(j);
       for (int b = 0; b < numButtons; b++) {
@@ -701,9 +706,11 @@ void AppPlatform_sdl::init() {
           break;
         }
       }
-      if (activeJoy) break;
+      if (activeJoy)
+        break;
       if (numAxes >= 2) {
-        if (abs(SDL_JoystickGetAxis(j, 0)) > 9000 || abs(SDL_JoystickGetAxis(j, 1)) > 9000) {
+        if (abs(SDL_JoystickGetAxis(j, 0)) > 9000 ||
+            abs(SDL_JoystickGetAxis(j, 1)) > 9000) {
           activeJoy = j;
           break;
         }
@@ -716,7 +723,8 @@ void AppPlatform_sdl::init() {
     if (!activeJoy) {
       for (int i = 0; i < s_numOpenedControllers; i++) {
         SDL_Joystick *j = s_gameControllers[i];
-        if (j && SDL_JoystickNumButtons(j) >= 4 && SDL_JoystickNumAxes(j) >= 2) {
+        if (j && SDL_JoystickNumButtons(j) >= 4 &&
+            SDL_JoystickNumAxes(j) >= 2) {
           activeJoy = j;
           break;
         }
@@ -742,7 +750,8 @@ void AppPlatform_sdl::init() {
 
       const char *jname = SDL_JoystickName(SDL_JoystickIndex(activeJoy));
       std::string nameStr = jname ? jname : "";
-      for (auto &c : nameStr) c = (char)tolower((unsigned char)c);
+      for (auto &c : nameStr)
+        c = (char)tolower((unsigned char)c);
       bool isSony = (nameStr.find("sony") != std::string::npos ||
                      nameStr.find("dualshock") != std::string::npos ||
                      nameStr.find("dualsense") != std::string::npos ||
@@ -780,10 +789,18 @@ void AppPlatform_sdl::init() {
         }
       }
 
-      float lx = (s_numAxes > 0) ? (float)SDL_JoystickGetAxis(activeJoy, 0) / 32767.0f : 0.0f;
-      float ly = (s_numAxes > 1) ? (float)SDL_JoystickGetAxis(activeJoy, 1) / 32767.0f : 0.0f;
-      float rx = (rxAxis >= 0) ? (float)SDL_JoystickGetAxis(activeJoy, rxAxis) / 32767.0f : 0.0f;
-      float ry = (ryAxis >= 0) ? (float)SDL_JoystickGetAxis(activeJoy, ryAxis) / 32767.0f : 0.0f;
+      float lx = (s_numAxes > 0)
+                     ? (float)SDL_JoystickGetAxis(activeJoy, 0) / 32767.0f
+                     : 0.0f;
+      float ly = (s_numAxes > 1)
+                     ? (float)SDL_JoystickGetAxis(activeJoy, 1) / 32767.0f
+                     : 0.0f;
+      float rx = (rxAxis >= 0)
+                     ? (float)SDL_JoystickGetAxis(activeJoy, rxAxis) / 32767.0f
+                     : 0.0f;
+      float ry = (ryAxis >= 0)
+                     ? (float)SDL_JoystickGetAxis(activeJoy, ryAxis) / 32767.0f
+                     : 0.0f;
 
       Gamepad::feedAxis(GP_AXIS_LX, lx, 0);
       Gamepad::feedAxis(GP_AXIS_LY, ly, 1);
@@ -795,12 +812,16 @@ void AppPlatform_sdl::init() {
       if (ltAxis >= 0 && rtAxis >= 0) {
         lt = (float)SDL_JoystickGetAxis(activeJoy, ltAxis) / 32767.0f;
         rt = (float)SDL_JoystickGetAxis(activeJoy, rtAxis) / 32767.0f;
-        if (lt < 0.0f) lt = 0.0f;
-        if (rt < 0.0f) rt = 0.0f;
+        if (lt < 0.0f)
+          lt = 0.0f;
+        if (rt < 0.0f)
+          rt = 0.0f;
       } else if (trigAxis >= 0) {
         float trig = (float)SDL_JoystickGetAxis(activeJoy, trigAxis) / 32767.0f;
-        if (trig > 0.0f) rt = trig;
-        if (trig < 0.0f) lt = -trig;
+        if (trig > 0.0f)
+          rt = trig;
+        if (trig < 0.0f)
+          lt = -trig;
       }
       Gamepad::feedAxis(GP_AXIS_LT, lt, (ltAxis >= 0) ? ltAxis : trigAxis);
       Gamepad::feedAxis(GP_AXIS_RT, rt, (rtAxis >= 0) ? rtAxis : trigAxis);
@@ -808,7 +829,8 @@ void AppPlatform_sdl::init() {
       for (int i = 0; i < s_numButtons; ++i) {
         int mapped = Gamepad::mapSdlButton(i, s_numButtons, s_numAxes);
         if (mapped >= 0) {
-          Gamepad::feedButton(mapped, SDL_JoystickGetButton(activeJoy, i) != 0, i);
+          Gamepad::feedButton(mapped, SDL_JoystickGetButton(activeJoy, i) != 0,
+                              i);
         }
       }
 

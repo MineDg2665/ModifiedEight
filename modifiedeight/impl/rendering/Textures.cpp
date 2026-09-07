@@ -51,15 +51,20 @@ int32_t Textures::assignTexture(const std::string& s, TextureData& d, bool_t b){
 
 	glGenTextures(1, &d.glTexId);
 	this->bind(d.glTexId);
-	if(b){
+	bool_t isNpot = ((d.width & (d.width - 1)) != 0) || ((d.height & (d.height - 1)) != 0);
+	if(b || isNpot){
 		glTexParameteri(GL_TEXTURE_2D, 0x2802u, 33071);
 		glTexParameteri(GL_TEXTURE_2D, 0x2803u, 33071);
-		glTexParameteri(GL_TEXTURE_2D, 0x2801u, 9729);
-		v8 = 9729;
 	}
 	else{
 		glTexParameteri(GL_TEXTURE_2D, 0x2802u, 10497);
 		glTexParameteri(GL_TEXTURE_2D, 0x2803u, 10497);
+	}
+	if(b){
+		glTexParameteri(GL_TEXTURE_2D, 0x2801u, 9729);
+		v8 = 9729;
+	}
+	else{
 		glTexParameteri(GL_TEXTURE_2D, 0x2801u, 9728);
 		v8 = 9728;
 	}

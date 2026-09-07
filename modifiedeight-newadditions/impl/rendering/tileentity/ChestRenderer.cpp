@@ -78,7 +78,7 @@ void ChestRenderer::render(struct TileEntity* tee, float x, float y, float z, fl
 			glTranslatef(modelOffsetX * v20, 0.0, 0.0);
 		} else {
 			v19 = &this->field_8;
-			if(te->type == 6 || (te->level && te->getTile() && Tile::enderChest && te->getTile() == Tile::enderChest)) {
+			if (te->type == 6 || (te->level && te->getTile() && Tile::enderChest && te->getTile() == Tile::enderChest)) {
 				this->bindTexture("item/chest/ender.png");
 			} else {
 				this->bindTexture("item/chest/normal.png");
@@ -90,3 +90,4 @@ void ChestRenderer::render(struct TileEntity* tee, float x, float y, float z, fl
 		glPopMatrix();
 	}
 }
+

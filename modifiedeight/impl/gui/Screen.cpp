@@ -60,6 +60,14 @@ void Screen::setSize(int32_t w, int32_t h){
 }
 
 void Screen::render(int32_t x, int32_t y, float){
+	glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	if(this->supppressedBySubWindow()){
 		for(GuiElement** start = this->elements.data(); start != (this->elements.data()+this->elements.size()); ++start){
 			(*start)->topRender(this->minecraft, x, y);

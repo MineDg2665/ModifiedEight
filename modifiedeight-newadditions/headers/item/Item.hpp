@@ -222,4 +222,5 @@ struct Item{
 	virtual bool_t isEmissive(int32_t);
 	virtual int32_t getAnimationFrameFor(Mob*);
 
+	static bool isVanilla081Id(int32_t id);
 };
