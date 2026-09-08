@@ -543,6 +543,7 @@ void LevelRenderer::render(const AABB &a2) {
   Vec3 v6(-v5.x, -v5.y, -v5.z);
   Tesselator::instance.offset(v6);
   Tesselator::instance.begin(3);
+  Tesselator::instance.color(0, 0, 0, 102);
   Tesselator::instance.vertex(a2.minX, a2.minY, a2.minZ);
   Tesselator::instance.vertex(a2.maxX, a2.minY, a2.minZ);
   Tesselator::instance.vertex(a2.maxX, a2.minY, a2.maxZ);
@@ -550,6 +551,7 @@ void LevelRenderer::render(const AABB &a2) {
   Tesselator::instance.vertex(a2.minX, a2.minY, a2.minZ);
   Tesselator::instance.draw(1);
   Tesselator::instance.begin(3);
+  Tesselator::instance.color(0, 0, 0, 102);
   Tesselator::instance.vertex(a2.minX, a2.maxY, a2.minZ);
   Tesselator::instance.vertex(a2.maxX, a2.maxY, a2.minZ);
   Tesselator::instance.vertex(a2.maxX, a2.maxY, a2.maxZ);
@@ -557,6 +559,7 @@ void LevelRenderer::render(const AABB &a2) {
   Tesselator::instance.vertex(a2.minX, a2.maxY, a2.minZ);
   Tesselator::instance.draw(1);
   Tesselator::instance.begin(1);
+  Tesselator::instance.color(0, 0, 0, 102);
   Tesselator::instance.vertex(a2.minX, a2.minY, a2.minZ);
   Tesselator::instance.vertex(a2.minX, a2.maxY, a2.minZ);
   Tesselator::instance.vertex(a2.maxX, a2.minY, a2.minZ);
@@ -1025,17 +1028,14 @@ void LevelRenderer::renderHitOutline(Player *a2, const HitResult &a3,
     int32_t v9 = this->level->getTile(a3.field_4, a3.field_8, a3.field_C);
     if (v9 > 0) {
       Tile::tiles[v9]->updateShape(this->level, a3.field_4, a3.field_8, a3.field_C);
-      float v11 = a2->prevPosX + (float)((float)(a2->posX - a2->prevPosX) * a6);
-      float v12 = a2->prevPosY + (float)((float)(a2->posY - a2->prevPosY) * a6);
-      float v13 = a2->prevPosZ + (float)((float)(a2->posZ - a2->prevPosZ) * a6);
       AABB v15 = Tile::tiles[v9]->getTileAABB(this->level, a3.field_4, a3.field_8, a3.field_C);
       AABB v16{
-          (float)(v15.minX - 0.002f) - v11,
-          (float)(v15.minY - 0.002f) - v12,
-          (float)(v15.minZ - 0.002f) - v13,
-          (float)(v15.maxX + 0.002f) - v11,
-          (float)(v15.maxY + 0.002f) - v12,
-          (float)(v15.maxZ + 0.002f) - v13,
+          (float)(v15.minX - 0.002f),
+          (float)(v15.minY - 0.002f),
+          (float)(v15.minZ - 0.002f),
+          (float)(v15.maxX + 0.002f),
+          (float)(v15.maxY + 0.002f),
+          (float)(v15.maxZ + 0.002f),
       };
       this->render(v16);
     }
