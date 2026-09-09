@@ -367,7 +367,7 @@ void GameRenderer::pick(float a2) {
 			if(this->minecraft->viewEntityMaybe) {
 				if(this->minecraft->viewEntityMaybe->isAlive()) {
 					float v6 = this->minecraft->gameMode->getPickRange();
-					Vec3 v72(0, 0, 0);
+					Vec3 v72 = this->minecraft->viewEntityMaybe->getPos(a2);
 					bool updated;
 					if(!this->minecraft->useTouchscreen() || this->minecraft->options.useJoypad) {
 						bool isLiquidClipItem;
