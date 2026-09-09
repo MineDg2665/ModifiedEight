@@ -439,9 +439,9 @@ int32_t LevelRenderer::getLayerFeature(int32_t a1, bool_t a2) {
 			return 0;
 	}
 }
-void LevelRenderer::render(const AABB& a2) {
+void LevelRenderer::render(const AABB& a2, float pt) {
 	this->textures->loadAndBindTexture("terrain-atlas.tga");
-	Vec3 v5 = this->minecraft->player->getPos(0.0);
+	Vec3 v5 = this->minecraft->player->getPos(pt);
 	Vec3 v6(-v5.x, -v5.y, -v5.z);
 	Tesselator::instance.offset(v6);
 	Tesselator::instance.begin(3, 0);
@@ -876,7 +876,7 @@ void LevelRenderer::renderHitOutline(Player* a2, const HitResult& a3, int32_t a4
 				.maxZ = (float)(v15.maxZ + 0.002),
 			};
 
-			this->render(v16);
+			this->render(v16, a6);
 		}
 		//~v14
 	}
@@ -923,7 +923,7 @@ void LevelRenderer::renderOutlineHitSelect(Player* a2, float a3, Tile* a4, const
 	glDepthMask(0);
 	glColor4f(0.0, 0.0, 0.0, 0.4);
 	AABB v8 = a4->getTileAABB(this->level, a5.field_4, a5.field_8, a5.field_C);
-	this->render({v8.minX + 0.002f, v8.minY + 0.002f, v8.minZ + 0.002f, v8.maxX - 0.002f, v8.maxY - 0.002f, v8.maxZ - 0.002f});
+	this->render({v8.minX + 0.002f, v8.minY + 0.002f, v8.minZ + 0.002f, v8.maxX - 0.002f, v8.maxY - 0.002f, v8.maxZ - 0.002f}, a3);
 	glDepthMask(1u);
 }
 void LevelRenderer::renderShadows(const std::multimap<int32_t, Entity*, std::greater<int>>& a2, const std::vector<TileEntity*>& a3, float a4) {
