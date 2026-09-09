@@ -209,7 +209,7 @@ void TouchscreenInput::rebuild() {
         v14 = _D6E06660;
       }
       Tesselator::instance.colorABGR(v14);
-      sub_D6604D0C(this->sneakButton, 218, this->sneakingMaybe ? 82 : 64, 18.0);
+      sub_D6604D0C(this->sneakButton, 218, this->sneakingMaybe ? 64 : 82, 18.0);
     }
     if (!this->minecraft->currentScreen && this->cameraButton) {
       int vCam = this->isButtonDown(107) ? _D6E0665C : _D6E06660;
@@ -407,7 +407,6 @@ void TouchscreenInput::tick(Player *a2) {
               static int32_t s_lastSneakTap = 0;
               int32_t now = getTimeMs();
               if (now - s_lastSneakTap <= 400) {
-                this->minecraft->soundEngine->playUI("random.click", 1.0, 1.0);
                 this->sneakingMaybe = !this->sneakingMaybe;
                 s_lastSneakTap = 0;
               } else {

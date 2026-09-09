@@ -411,7 +411,6 @@ void TouchscreenInput::tick(Player *a2) {
               static int32_t s_lastSneakTap = 0;
               int32_t now = getTimeMs();
               if (now - s_lastSneakTap <= 400) {
-                this->minecraft->soundEngine->playUI("random.click", 1.0, 1.0);
                 this->sneakingMaybe = !this->sneakingMaybe;
                 s_lastSneakTap = 0;
               } else {
