@@ -444,24 +444,21 @@ void LevelRenderer::render(const AABB& a2) {
 	Vec3 v5 = this->minecraft->player->getPos(0.0);
 	Vec3 v6(-v5.x, -v5.y, -v5.z);
 	Tesselator::instance.offset(v6);
-	Tesselator::instance.begin(3);
-	Tesselator::instance.color(0, 0, 0, 102);
+	Tesselator::instance.begin(3, 0);
 	Tesselator::instance.vertex(a2.minX, a2.minY, a2.minZ);
 	Tesselator::instance.vertex(a2.maxX, a2.minY, a2.minZ);
 	Tesselator::instance.vertex(a2.maxX, a2.minY, a2.maxZ);
 	Tesselator::instance.vertex(a2.minX, a2.minY, a2.maxZ);
 	Tesselator::instance.vertex(a2.minX, a2.minY, a2.minZ);
 	Tesselator::instance.draw(1);
-	Tesselator::instance.begin(3);
-	Tesselator::instance.color(0, 0, 0, 102);
+	Tesselator::instance.begin(3, 0);
 	Tesselator::instance.vertex(a2.minX, a2.maxY, a2.minZ);
 	Tesselator::instance.vertex(a2.maxX, a2.maxY, a2.minZ);
 	Tesselator::instance.vertex(a2.maxX, a2.maxY, a2.maxZ);
 	Tesselator::instance.vertex(a2.minX, a2.maxY, a2.maxZ);
 	Tesselator::instance.vertex(a2.minX, a2.maxY, a2.minZ);
 	Tesselator::instance.draw(1);
-	Tesselator::instance.begin(1);
-	Tesselator::instance.color(0, 0, 0, 102);
+	Tesselator::instance.begin(1, 0);
 	Tesselator::instance.vertex(a2.minX, a2.minY, a2.minZ);
 	Tesselator::instance.vertex(a2.minX, a2.maxY, a2.minZ);
 	Tesselator::instance.vertex(a2.maxX, a2.minY, a2.minZ);
@@ -860,9 +857,6 @@ void LevelRenderer::renderHit(Player* a2, const HitResult& a3, int32_t df, void*
 void LevelRenderer::renderHitOutline(Player* a2, const HitResult& a3, int32_t a4, void*, float a6) {
 	int32_t v9;	 // r0
 	int32_t v10; // r8
-	float v11;	 // s17
-	float v12;	 // s18
-	float v13;	 // s16
 
 	if(!a4 && a3.hitType == 0) {
 		glColor4f(0.0, 0.0, 0.0, 0.4);
